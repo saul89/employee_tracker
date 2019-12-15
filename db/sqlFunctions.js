@@ -99,35 +99,29 @@ const sqlFunctions = {
     );
   },
   updateRole: function updateRole(employee) {
-    let query = `
-            SELECT title
-            FROM roles
-            LEFT JOIN employees
-            ON roles.id = employees.role_id
-            WHERE employees.first_name != '${
-              employee.updateEmployee.split(" ")[0]
-            }' AND employees.last_name != '${
-      employee.updateEmployee.split(" ")[1]
-    }'`;
+    let query = "SELECT roles.id, title FROM roles";
     return new Promise((resolve, reject) => {
       connection.query(query, function(err, res) {
         if (err) return reject(err);
-        resolve(res.map(role => role.title));
+        resolve(res.map(role => role.id + " " + role.title));
       });
     });
   },
   updateManager: function updateManager(employee) {
     let query = `
-            SELECT first_name, last_name FROM employees WHERE employees.first_name != '${
-              employee.updateEmployee.split(" ")[0]
+            SELECT id, first_name, last_name FROM employees WHERE employees.first_name != '${
+              employee.updateEmployee.split(" ")[1]
             }' AND employees.last_name != '${
-      employee.updateEmployee.split(" ")[1]
+      employee.updateEmployee.split(" ")[2]
     }'`;
     return new Promise((resolve, reject) => {
       connection.query(query, function(err, res) {
         if (err) return reject(err);
         resolve(
-          res.map(employee => employee.first_name + " " + employee.last_name)
+          res.map(
+            employee =>
+              employee.id + " " + employee.first_name + " " + employee.last_name
+          )
         );
       });
     });
@@ -155,6 +149,24 @@ const sqlFunctions = {
       err,
       res
     ) {
+      if (err) throw err;
+      console.log(res);
+    });
+  },
+  roleUpdate: function roleUpdate(employee, role) {
+    let query = `UPDATE employees SET role_id = ${
+      role.updatePropriety.split(" ")[0]
+    } WHERE id = ${employee.updateEmployee.split(" ")[0]}`;
+    connection.query(query, function(err, res) {
+      if (err) throw err;
+      console.log(res);
+    });
+  },
+  managerUpdate: function managerUpdate(employee, manager) {
+    let query = `UPDATE employees SET manager_id = ${
+      manager.updatePropriety.split(" ")[0]
+    } WHERE id = ${employee.updateEmployee.split(" ")[0]}`;
+    connection.query(query, function(err, res) {
       if (err) throw err;
       console.log(res);
     });

@@ -14,7 +14,9 @@ const {
   updateRole,
   deleteDepartment,
   deleteRole,
-  deleteEmployee
+  deleteEmployee,
+  roleUpdate,
+  managerUpdate
 } = require("./db/sqlFunctions.js");
 
 async function init() {
@@ -22,7 +24,6 @@ async function init() {
   let { action } = answers;
 
   let removeChoices;
-  let updateChoices;
   let manager = await selectEmployee();
   manager.push("none");
 
@@ -145,30 +146,32 @@ async function init() {
       break;
 
     case "update employee role":
-    case "update employee manager":
-      const updateEmployee = await inquirer.prompt(update);
-
-      switch (action.split(" ")[2]) {
-        case "role":
-          updateChoices = await updateRole(updateEmployee);
-          break;
-        case "manager":
-          updateChoices = await updateManager(updateEmployee);
-          break;
-        default:
-          break;
-      }
-
-      const updatePropriety = [
+      const updateRoleQuestions = await inquirer.prompt(update);
+      const updateNewRole = [
         {
           type: "list",
           name: "updatePropriety",
           message: `What is the new employee ${action.split(" ")[2]}?`,
-          choices: updateChoices
+          choices: await updateRole(updateRoleQuestions)
         }
       ];
+      const updateEmpRole = await inquirer.prompt(updateNewRole);
+      roleUpdate(updateRoleQuestions, updateEmpRole);
+      init();
+      break;
 
-      const updateTbl = await inquirer.prompt(updatePropriety);
+    case "update employee manager":
+      const updateManagerQuestions = await inquirer.prompt(update);
+      const updateNewManager = [
+        {
+          type: "list",
+          name: "updatePropriety",
+          message: `What is the new employee ${action.split(" ")[2]}?`,
+          choices: await updateManager(updateManagerQuestions)
+        }
+      ];
+      const updateEmpManager = await inquirer.prompt(updateNewManager);
+      managerUpdate(updateManagerQuestions, updateEmpManager);
       init();
       break;
     case "exit":
