@@ -16,7 +16,10 @@ const {
   deleteRole,
   deleteEmployee,
   roleUpdate,
-  managerUpdate
+  managerUpdate,
+  empByDepartment,
+  empByManager,
+  budgetByDepartment
 } = require("./db/sqlFunctions.js");
 
 async function init() {
@@ -174,6 +177,22 @@ async function init() {
       managerUpdate(updateManagerQuestions, updateEmpManager);
       init();
       break;
+
+    case "view all employees by department":
+      empByDepartment();
+      init();
+      break;
+
+    case "view all employees by manager":
+      empByManager();
+      init();
+      break;
+
+    case "view total utilized budget by department":
+      budgetByDepartment();
+      init();
+      break;
+
     case "exit":
       connection.end();
       break;

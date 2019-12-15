@@ -170,6 +170,44 @@ const sqlFunctions = {
       if (err) throw err;
       console.log(res);
     });
+  },
+  empByDepartment: function empByDepartment() {
+    let query = `
+    SELECT departments.name, first_name, last_name
+    FROM departments
+    JOIN roles ON departments.id = roles.department_id
+    JOIN employees ON roles.id = employees.role_id`;
+    connection.query(query, function(err, res) {
+      if (err) throw err;
+      console.log(res);
+    });
+  },
+  empByManager: function empByManager() {
+    let query = `
+    SELECT  concat(M.first_name , ' ' , M.last_name) AS manager, 
+    concat(E.first_name , ' ' , E.last_name) AS employee
+    FROM employees E 
+    LEFT OUTER JOIN employees M
+    ON M.id = E.manager_id;
+    `;
+    connection.query(query, function(err, res) {
+      if (err) throw err;
+      console.log(res);
+    });
+  },
+  budgetByDepartment: function budgetByDepartment() {
+    let query = `
+    SELECT name, SUM(salary) AS budget
+    FROM departments
+    JOIN roles ON departments.id = roles.department_id
+    JOIN employees ON roles.id = employees.role_id
+    GROUP BY name
+    ORDER BY budget DESC;
+    `;
+    connection.query(query, function(err, res) {
+      if (err) throw err;
+      console.log(res);
+    });
   }
 };
 
