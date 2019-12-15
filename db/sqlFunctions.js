@@ -131,6 +131,33 @@ const sqlFunctions = {
         );
       });
     });
+  },
+  deleteDepartment: function deleteDepartment(department) {
+    let query = "DELETE FROM departments WHERE id =?";
+    connection.query(query, [department.remove.split(" ")[0]], function(
+      err,
+      res
+    ) {
+      if (err) throw err;
+      console.log(res);
+    });
+  },
+  deleteRole: function deleteRole(role) {
+    let query = "DELETE FROM roles WHERE id =?";
+    connection.query(query, [role.remove.split(" ")[0]], function(err, res) {
+      if (err) throw err;
+      console.log(res);
+    });
+  },
+  deleteEmployee: function deleteEmployee(employee) {
+    let query = "DELETE FROM employees WHERE id =?";
+    connection.query(query, [employee.remove.split(" ")[0]], function(
+      err,
+      res
+    ) {
+      if (err) throw err;
+      console.log(res);
+    });
   }
 };
 

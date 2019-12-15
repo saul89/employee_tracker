@@ -11,7 +11,10 @@ const {
   insertEmployee,
   insertRole,
   updateManager,
-  updateRole
+  updateRole,
+  deleteDepartment,
+  deleteRole,
+  deleteEmployee
 } = require("./db/sqlFunctions.js");
 
 async function init() {
@@ -124,9 +127,20 @@ async function init() {
       break;
 
     case "delete department":
+      const depToDelete = await inquirer.prompt(remove);
+      deleteDepartment(depToDelete);
+      init();
+      break;
+
     case "delete role":
+      const roleToDelete = await inquirer.prompt(remove);
+      deleteRole(roleToDelete);
+      init();
+      break;
+
     case "delete employee":
-      const deleteTblRow = await inquirer.prompt(remove);
+      const empToDelete = await inquirer.prompt(remove);
+      deleteEmployee(empToDelete);
       init();
       break;
 
